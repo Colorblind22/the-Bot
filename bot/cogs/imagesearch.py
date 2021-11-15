@@ -4,7 +4,7 @@ from pybooru import Danbooru as danbooru
 import nekos
 from pygelbooru import Gelbooru
 
-data_folder = 'C:/more like shithub/discord-bot-master/data'
+data_folder = 'C:/more like shithub/discord-bot-master/data/'
 
 class FileHandler:
     
@@ -33,7 +33,7 @@ class FileHandler:
         file.close()
 
     async def write(self, tag, file):
-        f= open('C:/music bot haha/data/'+file+'data.txt', 'a')
+        f= open(data_folder+file+'data.txt', 'a')
         for x in tag:
             f.write(x + '\n')
         f.close()
@@ -50,8 +50,6 @@ client = danbooru(site_name='danbooru', api_key=data.danbooru_api_key)
 gelbooru = Gelbooru(api_key=data.gelbooru_api_key, user_id=data.gelbooru_user_id)
 fh = FileHandler()
 
-
-# noinspection SpellCheckingInspection
 class ImageSearch(commands.Cog):
     
     def __init__(self, client):
