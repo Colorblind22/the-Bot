@@ -19,12 +19,14 @@ class FileHandler:
                 for tag in index.split(" "):
                     results[tag] += 1
         with open(f'{data_folder}{board}tagfrequency.txt', 'w') as f:
-            for x, y in sorted(results.items(), reverse=True, key=lambda x: x[1]):
+            for x, y in sorted(results.items(), reverse=True, key=lambda x: x[1]): # sort the values in the dict greatest to least
                 f.write(f'{str(y)} - {str(x)}\n')
 
     async def write(self, tag, file):
         if tag is None:
-            tag = 'random'
+            tag = ['random']
+        else:
+            tag = [tag]
         with open(f'{data_folder}{file}data.txt', 'a') as f:
             for x in tag:
                 f.write(f'{x}\n')
@@ -64,11 +66,8 @@ class ImageSearch(commands.Cog):
             elif len(tag) == 2:
                 return f'{tag[0]} {tag[1]}'
             elif len(tag) > 2:
-                await tagOverload()
+                await ctx.send('`Only 2 tags can be searched for at a time, random searching`')
 
-        async def tagOverload():
-            await ctx.send('`Only 2 tags can be searched for at a time, random searching`')
-            
         t = await tagCon()
         post = danbooru.post_list(limit = 1, tags = t, random = True)[0]
         try:
@@ -83,11 +82,11 @@ class ImageSearch(commands.Cog):
     @commands.command(name='gelbooru')
     async def gelbooru_search(self, ctx, *tag):   
         y = list(tag)
-        try: 
-            await ctx.send(str(await gelbooru.random_post(tags=y)))
-            await fh.write(y, 'gelbooru')
-        except:
-            await ctx.send('error')
+ 
+        await ctx.send(str(await gelbooru.random_post(tags=y)))
+        await fh.write(y, 'gelbooru')
+
+
 
     @commands.command(name='nekos.life')
     async def neko(self, ctx, tag='neko'):

@@ -14,7 +14,7 @@ class MusicBot(commands.Bot):
 
         for cog in self._cogs:
             self.load_extension(f"bot.cogs.{cog}")
-            print(f"    Loaded `{cog}` cog.")
+            print(f"\tLoaded {cog}")
 
         print("setup done :3")
 
@@ -36,7 +36,7 @@ class MusicBot(commands.Bot):
         await self.shutdown()
 
     async def on_connect(self):
-        print(f"    connected to discord (latency: {self.latency*1000:,.0f}ms)")
+        print(f"\tconnected to discord (latency: {self.latency*1000:,.0f}ms)")
 
     async def on_resumed(self):
         print("resumed")
