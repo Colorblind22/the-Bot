@@ -1,7 +1,5 @@
 import discord
-from discord.ext import commands, tasks
-import nekos
-
+from discord.ext import commands
 
 class Main(commands.Cog):
 

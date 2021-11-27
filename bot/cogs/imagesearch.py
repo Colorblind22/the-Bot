@@ -8,9 +8,9 @@ data_folder = 'C:/more like shithub/discord-bot-master/data/'
 
 class FileHandler:
     
-    async def leader_update(self, board):
+    async def leader_update(self, board: str):
         with open(f'{data_folder}{board}data.txt', 'r') as file:
-            results = dict()
+            results: dict
             lines = file.read().splitlines()
             for line in lines: # instantiate the dictionary with all of the tags, value set to 0
                 for tag in line.split(" "):
@@ -22,19 +22,17 @@ class FileHandler:
             for x, y in sorted(results.items(), reverse=True, key=lambda x: x[1]): # sort the values in the dict greatest to least
                 f.write(f'{str(y)} - {str(x)}\n')
 
-    async def write(self, tag, file):
+    async def write(self, tag: list, file: str):
         if tag is None:
             tag = ['random']
-        else:
-            tag = [tag]
         with open(f'{data_folder}{file}data.txt', 'a') as f:
             for x in tag:
                 f.write(f'{x}\n')
         await self.leader_update(file)
 
-    async def error_log(self, post):
+    async def error_log(self, post: str, board: str):
         with open(f'{data_folder}ERRONEOUS_POSTS.txt', 'a') as f:
-            f.write(f'{post}\n\n')
+            f.write(f'{board}\t{post}\n\n')
 
 class Private:
     danbooru_api_key = 'HE3uUzSG85HGgYtCQLmd5zRF'
@@ -75,16 +73,23 @@ class ImageSearch(commands.Cog):
             await fh.write(t, 'danbooru')
         except KeyError:
             print('\t\t------------FILE_URL ERROR------------')
-            await fh.error_log(post)
+            await fh.error_log(f'{post['id']} ', 'danbooru')
         except IndexError:
-            await ctx.send(f'No posts found for tag {str(tag)} {nekos.textcat()}')
+            await ctx.send(f'No posts found for tag {str(t)} {nekos.textcat()}')
 
     @commands.command(name='gelbooru')
     async def gelbooru_search(self, ctx, *tag):   
         y = list(tag)
- 
-        await ctx.send(str(await gelbooru.random_post(tags=y)))
-        await fh.write(y, 'gelbooru')
+        post = await gelbooru.random_post(tags=y)
+        try:
+            if post is not None:
+                await ctx.send(str(post))
+                await fh.write(y, 'gelbooru')
+            else:
+                await ctx.send(f'No posts found for tag {str(tag)} {nekos.textcat()}')
+        except:
+            print('\t\t--------------GELBOORU ERROR----------------')
+            await fh.error_log(str(post), 'gelbooru')
 
 
 
