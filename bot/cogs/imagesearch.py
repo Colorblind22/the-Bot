@@ -31,7 +31,7 @@ class FileHandler:
         await self.leader_update(file)
 
     async def error_log(self, post: str, board: str):
-        with open(f'{data_folder}ERRONEOUS_POSTS.txt', 'a') as f:
+        with open(f'{data_folder}_ERRONEOUS_POSTS.txt', 'a') as f:
             f.write(f'{board}\t{post}\n\n')
 
 class Private:
