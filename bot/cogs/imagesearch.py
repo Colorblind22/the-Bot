@@ -4,7 +4,7 @@ from pybooru import Danbooru
 import nekos
 from pygelbooru import Gelbooru
 
-data_folder = 'C:/more like shithub/discord-bot-master/data/'
+data_folder = 'data/'
 
 class FileHandler:
     
@@ -65,15 +65,30 @@ class ImageSearch(commands.Cog):
                 return f'{tag[0]} {tag[1]}'
             elif len(tag) > 2:
                 await ctx.send('`Only 2 tags can be searched for at a time, random searching`')
+    
+        tag = await tagCon()
 
-        t = await tagCon()
-        post = danbooru.post_list(limit = 1, tags = t, random = True)[0]
-        try:
+        async def search(t:str):
+            return danbooru.post_list(limit = 1, tags = t, random = True)[0]
+
+        async def restricted(post) -> bool:
+            return post['tag_string_general'].find('loli') > 0 || post['tag_string_general'].find('shota') > 0
+        
+        async def send(post):
             await ctx.send(post['file_url'])
-            await fh.write(t, 'danbooru')
+            await fh.write(tag, 'danbooru')
+        
+        p = await search()
+        try:
+            if(not restricted(p)):
+                await send(p)
+            else:       #not sure if this will work !!
+                p = await search()
+                await send(p)
         except KeyError:
             print('\t\t------------FILE_URL ERROR------------')
-            await fh.error_log(f'{post['id']} ', 'danbooru')
+            temp = p['id']
+            await fh.error_log(f'{temp} ', 'danbooru')
         except IndexError:
             await ctx.send(f'No posts found for tag {str(t)} {nekos.textcat()}')
 
