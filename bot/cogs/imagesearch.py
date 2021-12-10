@@ -90,7 +90,7 @@ class ImageSearch(commands.Cog):
             temp = p['id']
             await fh.error_log(f'{temp} ', 'danbooru')
         except IndexError:
-            await ctx.send(f'No posts found for tag {str(t)} {nekos.textcat()}')
+            await ctx.send(f'No posts found for tag {str(tag)} {nekos.textcat()}')
 
     @commands.command(name='gelbooru')
     async def gelbooru_search(self, ctx, *tag):   
