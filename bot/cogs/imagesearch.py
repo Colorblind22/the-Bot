@@ -72,7 +72,7 @@ class ImageSearch(commands.Cog):
             return danbooru.post_list(limit = 1, tags = t, random = True)[0]
 
         async def restricted(post) -> bool:
-            return post['tag_string_general'].find('loli') > 0 || post['tag_string_general'].find('shota') > 0
+            return post['tag_string_general'].find('loli') > 0 or post['tag_string_general'].find('shota') > 0
         
         async def send(post):
             await ctx.send(post['file_url'])
