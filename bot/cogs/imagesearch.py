@@ -55,7 +55,7 @@ class ImageSearch(commands.Cog):
         print('danbooru cog loaded for pictures of ankha for kody')
 
     @commands.command(name='danbooru')
-    async def danbooru_search(self, ctx, *tag):
+    async def danbooru_search(self, ctx, *tag:tuple):
         async def tagCon():
             if tag is None:
                 return None
@@ -74,17 +74,19 @@ class ImageSearch(commands.Cog):
         async def restricted(post) -> bool:
             return post['tag_string_general'].find('loli') > 0 or post['tag_string_general'].find('shota') > 0
         
-        async def send(post):
-            await ctx.send(post['file_url'])
-            await fh.write(tag, 'danbooru')
+        async def send(post) -> bool:
+            try:
+                await ctx.send(post['file_url'])
+                await fh.write(tag, 'danbooru')
+                return True
+            except:
+                post = await search(tag)
+                return False
         
-        p = await search()
+        p = await search(tag)
         try:
-            if(not restricted(p)):
-                await send(p)
-            else:       #not sure if this will work !!
-                p = await search()
-                await send(p)
+            while(not send(p) and not restricted(p)):
+                pass
         except KeyError:
             print('\t\t------------FILE_URL ERROR------------')
             temp = p['id']
@@ -123,3 +125,11 @@ class ImageSearch(commands.Cog):
 
 def setup(client):
     client.add_cog(ImageSearch(client))
+
+import asyncio
+
+if __name__ == '__main__':
+    obj = ImageSearch(None)
+    asyncio.run(obj.danbooru_search(None, 'rating:safe'))
+
+
