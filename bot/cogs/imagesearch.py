@@ -55,7 +55,7 @@ class ImageSearch(commands.Cog):
         print('danbooru cog loaded for pictures of ankha for kody')
 
     @commands.command(name='danbooru')
-    async def danbooru_search(self, ctx, *tag:tuple):
+    async def danbooru_search(self, ctx, *tag):
         async def tagCon():
             if tag is None:
                 return None
@@ -130,6 +130,6 @@ import asyncio
 
 if __name__ == '__main__':
     obj = ImageSearch(None)
-    asyncio.run(obj.danbooru_search(None, 'rating:safe'))
+    asyncio.run(obj.danbooru_search(None, ('rating:safe',)))
 
 
